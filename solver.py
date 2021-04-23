@@ -12,12 +12,52 @@ board = [
     [0, 4, 9, 2, 0, 6, 0, 0, 7]
 ]
 
+grid = [
+    [3, 0, 6, 5, 0, 8, 4, 0, 0],
+    [5, 2, 0, 0, 0, 0, 0, 0, 0],
+    [0, 8, 7, 0, 0, 0, 0, 3, 1],
+    [0, 0, 3, 0, 1, 0, 0, 8, 0],
+    [9, 0, 0, 8, 6, 3, 0, 0, 5],
+    [0, 5, 0, 0, 9, 0, 6, 0, 0],
+    [1, 3, 0, 0, 0, 0, 2, 5, 0],
+    [0, 0, 0, 0, 0, 0, 0, 7, 4],
+    [0, 0, 5, 2, 0, 6, 3, 0, 0]]
 
-def solve():
-    pass
+
+def solve(board):
+    found = find_empty(board)
+
+    if found:
+        row, col = found
+    else:
+        return True
+
+    for num in range(1, 10):
+        if is_safe(board, (row, col), num):
+            board[row][col] = num
+
+            if solve(board):
+                return True
+
+            board[row][col] = 0
+
+    return False
 
 
-def safe(board, pos, num):
+def find_empty(board):
+    """
+    Returns coordinates of empty location on board
+    If no empty location found returns null
+    :param board: 2d list of ints
+    """
+    for x in range(9):
+        for y in range(9):
+            if board[x][y] == 0:
+                return (x, y)
+    return None
+
+
+def is_safe(board, pos, num):
     """
     Returns if the attempted move is safe
     :param board: 2d list of ints
@@ -36,7 +76,7 @@ def safe(board, pos, num):
         if board[x][col] == num:
             return False
 
-    # Find which subgrid to check
+    # Find which subgrid num is in
     subRow = row - row % 3
     subCol = col - col % 3
 
@@ -49,10 +89,8 @@ def safe(board, pos, num):
     return True
 
 
-if safe(board, (1, 7), 8) == True:
-    print("Safe")
+if solve(board):
+    pp = pprint.PrettyPrinter(width=41, compact=True)
+    pp.pprint(board)
 else:
-    print("Unsafe")
-
-""" pp = pprint.PrettyPrinter(width=41, compact=True)
-pp.pprint(board) """
+    print("No solution found!")
