@@ -1,27 +1,21 @@
 import pprint
+import sys
 
-board = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-]
+fileName = sys.argv[-1]
 
-grid = [
-    [3, 0, 6, 5, 0, 8, 4, 0, 0],
-    [5, 2, 0, 0, 0, 0, 0, 0, 0],
-    [0, 8, 7, 0, 0, 0, 0, 3, 1],
-    [0, 0, 3, 0, 1, 0, 0, 8, 0],
-    [9, 0, 0, 8, 6, 3, 0, 0, 5],
-    [0, 5, 0, 0, 9, 0, 6, 0, 0],
-    [1, 3, 0, 0, 0, 0, 2, 5, 0],
-    [0, 0, 0, 0, 0, 0, 0, 7, 4],
-    [0, 0, 5, 2, 0, 6, 3, 0, 0]]
+
+def getBoard():
+    if len(sys.argv) == 1:
+        with open("board.txt") as f:
+            board = [list(line.strip()) for line in f]
+    else:
+        with open(fileName) as f:
+            board = [list(line.strip()) for line in f]
+
+    for i in range(len(board)):
+        board[i] = list(map(int, board[i]))
+
+    return board
 
 
 def solve(board):
@@ -89,8 +83,14 @@ def is_safe(board, pos, num):
     return True
 
 
-if solve(board):
-    pp = pprint.PrettyPrinter(width=41, compact=True)
-    pp.pprint(board)
-else:
-    print("No solution found!")
+def main():
+    board = getBoard()
+    if solve(board):
+        pp = pprint.PrettyPrinter(width=41, compact=True)
+        pp.pprint(board)
+    else:
+        print("No solution found!")
+
+
+if __name__ == '__main__':
+    main()
