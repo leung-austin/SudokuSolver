@@ -1,34 +1,14 @@
 import pygame
 import sys
-from solver import solve, is_safe
+from solver import solve, is_safe, getBoard
 from pygame.locals import *
+from copy import deepcopy
 
 pygame.font.init()
 FPS = 60
 
-grid = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-]
-
-temp = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-]
+grid = getBoard()
+temp = deepcopy(grid)
 
 # Creating screen and grid
 SCREEN_SIZE = 90
@@ -67,7 +47,7 @@ def solver(grid, i, j):
             global x_coord, y_coord
             x_coord = i
             y_coord = j
-            # white color background\
+            # white color background
             SCREEN.fill((255, 255, 255))
             draw()
             draw_box(0)
@@ -77,7 +57,7 @@ def solver(grid, i, j):
                 return True
             else:
                 grid[i][j] = 0
-            # white color background\
+            # white color background
             SCREEN.fill((255, 255, 255))
 
             draw()
@@ -110,11 +90,11 @@ def draw():
         for j in range(9):
             if grid[i][j] != 0:
                 # Fill blue color in already numbered grid
-                pygame.draw.rect(SCREEN, (0, 153, 153),
+                pygame.draw.rect(SCREEN, LIGHT_GRAY,
                                  (j * dif, i * dif, dif + 1, dif + 1))
 
                 # Fill grid with default numbers specified
-                text1 = font1.render(str(grid[i][j]), 1, (0, 0, 0))
+                text1 = font1.render(str(grid[i][j]), 1, BLACK)
                 SCREEN.blit(text1, (j * dif + 15, i * dif + 15))
 
     # Draw lines horizontally and verticallyto form grid
@@ -133,7 +113,6 @@ def get_coord(pos):
     global x_coord, y_coord
     y_coord = pos[0] // dif
     x_coord = pos[1] // dif
-    print(x_coord, y_coord)
 
 
 def draw_val(val):
@@ -213,7 +192,7 @@ def main():
 
         if val != 0 and grid[int(x_coord)][int(y_coord)] == 0:
             draw_val(val)
-            # print(val)
+
             if is_safe(grid, (int(x_coord), int(y_coord)), val):
                 solution = solve(temp)
                 if solution:
@@ -223,7 +202,6 @@ def main():
                     else:
                         grid[int(x_coord)][int(y_coord)] = 0
                         val = 0
-                print(grid[int(x_coord)][int(y_coord)])
 
         draw()
         if selected == 1 and grid[int(x_coord)][int(y_coord)] == 0:
@@ -235,4 +213,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # pygame.quit()
